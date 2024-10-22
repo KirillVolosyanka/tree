@@ -1,5 +1,6 @@
 import org.w3c.dom.css.Counter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 class Node {
@@ -119,9 +120,6 @@ class AVLTree {
 
     public static int Counter(Node node, int height, int c){
         if(node != null){
-            /*ff
-            * dsffd
-            * \*/
             if (node.height != height) {
                 return (Counter(node.right, height, c) + Counter(node.left, height, c));
             }
@@ -132,11 +130,27 @@ class AVLTree {
         }
         return c;
     }
+    public static ArrayList<Integer> Usels(Node node, int height, ArrayList<Integer> t){
+        if (t.size() == 0){
+            t = new ArrayList<>();
+        }
+        if(node != null){
+            if (node.height != height) {
+                ArrayList<Integer> t_temp = new ArrayList<>();
+                t_temp.addAll(Usels(node.right, height, t));
+                t_temp.addAll(Usels(node.left, height, t));
+                return (t_temp);
+            }
+            else if(node != null && node.height == height) {
+                t.add(node.key);
+                return (t);
+            }
+        }
+        return t;
+    }
 
     public static void main(String[] args) {
         AVLTree tree = new AVLTree();
-
-        /* Пример использования */
         tree.root = tree.insert(tree.root, 4);
         tree.root = tree.insert(tree.root, 2);
         tree.root = tree.insert(tree.root, 6);
@@ -145,10 +159,10 @@ class AVLTree {
         tree.root = tree.insert(tree.root, 5);
         tree.root = tree.insert(tree.root, 7);
 
-
-        System.out.println("Обход дерева в порядке предков:");
-        tree.preOrder(tree.root);
-        int answer = Counter(tree.root, 1, 0);
-        System.out.println("\nAnswer = " + answer);
+        int answer = Counter(tree.root, 2, 0);
+        System.out.println("\nCount of usels at " + 2 + " height = " + answer);
+        ArrayList<Integer> usels = new ArrayList<>();
+        usels = Usels(tree.root, 2, usels);
+        System.out.println("Usels at " + 2 + " height: " + usels);
     }
 }
